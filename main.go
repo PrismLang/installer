@@ -13,13 +13,15 @@ func main() {
 	fmt.Printf("Prism Installer for %s (%s)\n\n", runtime.GOOS, runtime.GOARCH)
 
 	fmt.Println("Installing...")
-	if err := DownloadFile(); err != nil {
+	file, err := DownloadFile()
+	if err != nil {
 		panic(err)
 	}
+	os.Chmod(file, os.FileMode(int(0777)))
 	fmt.Println("Done.")
 }
 
-func DownloadFile() error {
+func DownloadFile() (string, error) {
 	var file string
 	url := "https://github.com/PrismLang/binaries/raw/master/prism-" + runtime.GOOS + "-" + runtime.GOARCH
 
@@ -37,16 +39,16 @@ func DownloadFile() error {
 
 	resp, err := http.Get(url)
 	if err != nil {
-		return err
+		return file, err
 	}
 	defer resp.Body.Close()
 
 	out, err := os.Create(file)
 	if err != nil {
-		return err
+		return file, err
 	}
 	defer out.Close()
 
 	_, err = io.Copy(out, resp.Body)
-	return err
+	return file, err
 }
