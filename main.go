@@ -31,7 +31,7 @@ func DownloadFile() error {
 		file = filepath.Join(installDir, "prism.exe")
 
 	default:
-		installDir := "/usr/bin"
+		installDir := "/usr/local/bin"
 		file = filepath.Join(installDir, "prism")
 	}
 
